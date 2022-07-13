@@ -17,7 +17,7 @@ public class MathApp {
 	/**
 	 * Instance vars - lazy names
 	 */
-	int difficulty;
+	int difficulty = 4;
 	int turns;
 	JTextArea t;
 	JButton check = new JButton("Check Solution");
@@ -29,7 +29,7 @@ public class MathApp {
 	JButton[] b = new JButton[4];
 	JButton[] s;
 	static JLabel[] n;
-	static JLabel[] g;
+	static JLabel g;
 	static CyclicList[] c;
 	private JFrame frame;
 
@@ -76,7 +76,7 @@ public class MathApp {
 		title.setLineWrap(true);
 		title.setFont(new Font("Dialog", Font.BOLD, 12));
 		title.setEditable(false);
-		title.setText("Rules:\r\nCrack the code in 6 turns by changing the values to equal the sum in the final box.\r\nYellow means you are 1 away from the correct value.");
+		title.setText("Rules:\r\nCrack the code in the given turns by changing the values to equal the sum in the final box.\r\nYellow means you are 1 away from the correct value.");
 		t = title;
 		title.setBackground(Color.LIGHT_GRAY);
 		title.setOpaque(true);
@@ -94,6 +94,7 @@ public class MathApp {
 		easy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				difficulty = 3;
 				initLevel(4, 225, 120);
 			}
 		});
@@ -109,6 +110,7 @@ public class MathApp {
 		medium.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				difficulty = 4;
 				initLevel(8, 320, 220);
 			}
 		});
@@ -124,6 +126,7 @@ public class MathApp {
 		hard.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				difficulty = 4;
 				initLevel(12, 420, 320);
 			}
 		});
@@ -139,6 +142,7 @@ public class MathApp {
 		expert.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				difficulty = 5;
 				initLevel(16, 520, 420);
 			}
 		});		
@@ -195,9 +199,9 @@ public class MathApp {
 		frame.setBounds(500, 400, 375, y);
 		Buttons e1 = new Buttons(z);
 		s = e1.getSwitches();
-		Labels e2 = new Labels(z);
+		Labels e2 = new Labels(z, code);
 		n = e2.getNumbers();
-		g = e2.getGoals();
+		g = e2.getGoal();
 		c = e2.getCycles();
 		showLevel(x);
 	}
@@ -208,9 +212,7 @@ public class MathApp {
 		count.setVisible(false);
 		win.setVisible(false);
 		mainMenu.setVisible(false);
-		for (int i = 0; i < g.length; i++) {
-			g[i].setVisible(false);
-		}
+		g.setVisible(false);
 		for (int i = 0; i < s.length; i++) {
 			s[i].setVisible(false);
 			n[i].setVisible(false);
@@ -234,10 +236,10 @@ public class MathApp {
 	public void turns() {
 		count.setText(""+turns);
 		if (turns == 1) {
-			turn.setText("turn. " + (6 - turns) + " remaining");
+			turn.setText("turn. " + (difficulty - turns) + " remaining");
 		}
 		else
-			turn.setText("turns. " + (6-turns) + " remaining");
+			turn.setText("turns. " + (difficulty - turns) + " remaining");
 	}
 	
 	public void showLevel(int v) {
@@ -252,30 +254,13 @@ public class MathApp {
 		check.setVisible(true);
 		mainMenu.setBounds(10, (v+30), 100, 20);
 		mainMenu.setVisible(true);
-		for (int i = 0; i < g.length; i++) {
-			frame.getContentPane().add(g[i]);
-		}
+		frame.getContentPane().add(g);
 		for (int i = 0; i < s.length; i++) {
 			frame.getContentPane().add(s[i]);
 			frame.getContentPane().add(n[i]);
 		}
 	}
-	
-	public static String getGoals(int v) {
-		if (v == 0) {
-			return ""+(code[0]+code[1]+code[2]+code[3]);
-		}
-		else if (v == 1) {
-			return ""+(code[4]+code[5]+code[6]+code[7]);
-		}
-		else if (v == 2) {
-			return ""+(code[8]+code[9]+code[10]+code[11]);
-		}
-		else
-			return ""+(code[12]+code[13]+code[14]+code[15]);
 		
-	}
-	
 	public static void adjustNum(int v) {
 		c[v].current = c[v].current.next;
 		n[v].setText(c[v].current.toString());
@@ -298,7 +283,7 @@ public class MathApp {
 			else
 				n[i].setBackground(Color.LIGHT_GRAY);
 		}
-		if (turns == 6 || checkBoard()) {
+		if (turns == difficulty || checkBoard()) {
 			endRound();
 		}
 		System.out.println(checkBoard());

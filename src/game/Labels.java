@@ -7,29 +7,32 @@ import javax.swing.SwingConstants;
 
 public class Labels {
 	private JLabel[] numbers;
-	private JLabel[] goals;
+	private JLabel goals;
 	private CyclicList[] cycles;
+	private int[] code;
 	
-	public Labels(int v) {
+	public Labels(int v, int[] c) {
 		makeLabels(v);
-		makeGoals(v);
+		code = c;
+		makeGoals();
 	}
 	
-	private void makeGoals(int v) {
-		goals = new JLabel[v/4];
+	private void makeGoals() {
+		goals = new JLabel();
 		int x1 = 290;
 		int y1 = 30;
-		for (int i = 0; i < goals.length; i++) {
-			goals[i] = new JLabel(MathApp.getGoals(i));
-			goals[i].setOpaque(true);
-			goals[i].setFont(new Font("Dialog", Font.BOLD, 30));
-			goals[i].setHorizontalAlignment(SwingConstants.CENTER);
-			goals[i].setBounds(x1, y1, 60, 60);
-			goals[i].setForeground(Color.PINK);
-			goals[i].setBackground(Color.DARK_GRAY);
-			y1 += 100;
+		for (int i = 0; i < numbers.length; i++) {
+			if (i == 4 || i == 8 || i == 12) { x1 = 290; y1 += 100;
+			}
 		}
-		
+		goals = new JLabel(getGoals());
+		goals.setOpaque(true);
+		goals.setFont(new Font("Dialog", Font.BOLD, 30));
+		goals.setHorizontalAlignment(SwingConstants.CENTER);
+		goals.setBounds(x1, y1, 60, 60);
+		goals.setForeground(Color.PINK);
+		goals.setBackground(Color.DARK_GRAY);
+		y1 += 100;
 	}
 
 	public void makeLabels(int v) {
@@ -51,12 +54,20 @@ public class Labels {
 			}
 	}
 	
+	public JLabel getGoal() {
+		return goals;
+	}
+	
 	public JLabel[] getNumbers() {
 		return numbers;
 	}
 	
-	public JLabel[] getGoals() {
-		return goals;
+	public String getGoals() {
+		int result = 0;
+		for (int i = 0; i < code.length; i++) {
+			result += code[i];
+		}
+		return "" + result;	
 	}
 	
 	public CyclicList[] getCycles() {
